@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>HA HA HA! Laughing Faces</title>
+<link href="https://fonts.googleapis.com/css2?family=Bangers&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#ffe14d;--ink:#1a1a1a;--card:#fff7d6;--face:#ffd23f;--accent:#ff3b6b;--dots:rgba(255,59,107,.25);box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#2b1b5a;--ink:#fff;--card:#3b2a78;--face:#ffd23f;--dots:rgba(255,255,255,.1)}}
+:root[data-theme="dark"]{--bg:#2b1b5a;--ink:#fff;--card:#3b2a78;--face:#ffd23f;--dots:rgba(255,255,255,.1)}
+*{box-sizing:border-box}
+html{scroll-padding-top:env(safe-area-inset-top,0px)}
+body{margin:0;background:var(--bg);background-image:radial-gradient(var(--dots) 2px,transparent 2.5px);background-size:16px 16px;color:var(--ink);font-family:'Bangers','Comic Sans MS',Impact,sans-serif;text-align:center;padding:24px 14px 40px}
+h1{font-size:clamp(2.4rem,9vw,4.5rem);margin:0;letter-spacing:3px;transform:rotate(-2deg);text-shadow:4px 4px 0 var(--accent)}
+p.sub{font-size:1.3rem;letter-spacing:1px;margin:8px 0 24px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:18px;max-width:900px;margin:0 auto}
+.card{background:var(--card);border:4px solid var(--ink);border-radius:18px;box-shadow:6px 6px 0 var(--ink);padding:10px 8px 14px;cursor:pointer;position:relative}
+.card:nth-child(odd){transform:rotate(-1.5deg)}.card:nth-child(even){transform:rotate(1.5deg)}
+.card:active{transform:scale(.95)}
+.card svg{width:100%;height:auto;display:block}
+.card span{font-size:1.5rem;letter-spacing:1px;display:block;margin-top:4px}
+.shake svg{animation:shake .12s infinite}
+@keyframes shake{0%{transform:translate(-2px,1px) rotate(-3deg)}50%{transform:translate(2px,-2px) rotate(3deg)}100%{transform:translate(-1px,2px) rotate(-2deg)}}
+.pop{position:absolute;top:-14px;right:-6px;background:var(--accent);color:#fff;border:3px solid var(--ink);border-radius:50% 50% 50% 8%;padding:4px 10px;font-size:1.2rem;transform:rotate(8deg);pointer-events:none}
+button{font:inherit;font-size:1.5rem;letter-spacing:1px;background:var(--accent);color:#fff;border:4px solid var(--ink);border-radius:14px;box-shadow:5px 5px 0 var(--ink);padding:8px 20px;margin:26px 6px 0;cursor:pointer}
+button:active{transform:translate(3px,3px);box-shadow:2px 2px 0 var(--ink)}
+button:focus-visible,.card:focus-visible{outline:4px dashed var(--accent);outline-offset:3px}
+@media (prefers-reduced-motion:reduce){.shake svg{animation:none}}
+</style>
+</head>
+<body>
+<h1>HA HA HA!</h1>
+<p class="sub">Tap a face. Try not to laugh.</p>
+<div class="grid" id="grid"></div>
+<button id="all">LAUGH ALL!</button>
+<script>
+const faces=[
+{n:"LOL",eyes:'<path d="M28 42 Q38 30 48 42" /><path d="M72 42 Q82 30 92 42"/>',mouth:'<path d="M26 58 Q60 110 94 58 Z" fill="#7a1020"/><path d="M40 82 Q60 100 80 82 Q60 74 40 82Z" fill="#ff6b81" stroke="none"/>',extra:'<path d="M20 52 q-8 10 -2 20" stroke="#38b6ff" fill="none"/><path d="M100 52 q8 10 2 20" stroke="#38b6ff" fill="none"/>',w:"LOL!"},
+{n:"ROFL",eyes:'<path d="M26 34 L46 42 L26 50"/><path d="M94 34 L74 42 L94 50"/>',mouth:'<path d="M22 60 Q60 118 98 60 Z" fill="#7a1020"/><rect x="34" y="60" width="52" height="10" fill="#fff" stroke="none"/>',extra:'',w:"ROFL!!"},
+{n:"CACKLE",eyes:'<ellipse cx="38" cy="40" rx="7" ry="9" fill="#1a1a1a"/><ellipse cx="82" cy="40" rx="7" ry="9" fill="#1a1a1a"/><path d="M26 24 L50 30 M94 24 L70 30"/>',mouth:'<path d="M24 62 Q60 66 96 62 Q86 104 60 104 Q34 104 24 62Z" fill="#7a1020"/><path d="M30 63 h12 v8 h-12z M46 64 h12 v10 h-12z M62 64 h12 v10 h-12z M78 63 h12 v8 h-12z" fill="#fff" stroke-width="2"/>',extra:'',w:"MWAHAHA!"},
+{n:"SNORT",eyes:'<path d="M28 44 Q38 34 48 44"/><path d="M72 44 Q82 34 92 44"/>',mouth:'<path d="M42 78 Q60 92 78 78" fill="none"/><ellipse cx="52" cy="62" rx="4" ry="6" fill="#1a1a1a"/><ellipse cx="68" cy="62" rx="4" ry="6" fill="#1a1a1a"/>',extra:'<circle cx="14" cy="64" r="6" fill="#bfeaff" stroke-width="2"/><circle cx="8" cy="76" r="4" fill="#bfeaff" stroke-width="2"/>',w:"PFFT!"},
+{n:"TEARS",eyes:'<path d="M28 42 Q38 30 48 42"/><path d="M72 42 Q82 30 92 42"/>',mouth:'<path d="M30 62 Q60 112 90 62 Z" fill="#7a1020"/>',extra:'<path d="M34 46 q-18 14 -14 34 q18 -8 14 -34Z" fill="#38b6ff"/><path d="M86 46 q18 14 14 34 q-18 -8 -14 -34Z" fill="#38b6ff"/>',w:"WAAHA!"},
+{n:"TONGUE",eyes:'<path d="M28 40 L48 46 M28 50 L48 46" /><path d="M92 40 L72 46 M92 50 L72 46"/>',mouth:'<path d="M28 62 Q60 98 92 62 Z" fill="#7a1020"/><path d="M48 76 Q60 116 72 76Z" fill="#ff6b81"/>',extra:'',w:"BLEH HA!"},
+{n:"GIGGLE",eyes:'<circle cx="38" cy="42" r="8" fill="#fff"/><circle cx="40" cy="42" r="4" fill="#1a1a1a"/><circle cx="82" cy="42" r="8" fill="#fff"/><circle cx="84" cy="42" r="4" fill="#1a1a1a"/>',mouth:'<path d="M40 70 Q60 90 80 70" fill="none"/>',extra:'<ellipse cx="26" cy="64" rx="8" ry="5" fill="#ff7aa2" stroke="none"/><ellipse cx="94" cy="64" rx="8" ry="5" fill="#ff7aa2" stroke="none"/>',w:"hehe~"},
+{n:"BELLY",eyes:'<path d="M28 42 Q38 30 48 42"/><path d="M72 42 Q82 30 92 42"/>',mouth:'<ellipse cx="60" cy="80" rx="28" ry="26" fill="#7a1020"/><ellipse cx="60" cy="94" rx="14" ry="9" fill="#ff6b81" stroke="none"/>',extra:'<path d="M20 20 l-8 -8 M100 20 l8 -8 M60 8 v-8" fill="none"/>',w:"HAHAHA!"}
+];
+const grid=document.getElementById('grid');
+faces.forEach(f=>{
+ const d=document.createElement('div');d.className='card';d.tabIndex=0;d.setAttribute('role','button');d.setAttribute('aria-label','Laugh: '+f.n);
+ d.innerHTML=`<svg viewBox="0 0 120 120" fill="none" stroke="#1a1a1a" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"><circle cx="60" cy="60" r="54" fill="var(--face)"/>${f.eyes}${f.mouth}${f.extra}</svg><span>${f.n}</span>`;
+ const go=()=>{d.classList.add('shake');const p=document.createElement('div');p.className='pop';p.textContent=f.w;d.appendChild(p);
+  try{if(navigator.vibrate)navigator.vibrate(40)}catch(e){}
+  setTimeout(()=>{d.classList.remove('shake');p.remove()},1100)};
+ d.onclick=go;d.onkeydown=e=>{if(e.key==='Enter'||e.key===' '){e.preventDefault();go()}};d._go=go;
+ grid.appendChild(d);
+});
+document.getElementById('all').onclick=()=>[...grid.children].forEach((c,i)=>setTimeout(c._go,i*90));
+</script>
+</body>
+</html>
