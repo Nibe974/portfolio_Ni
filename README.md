@@ -13,7 +13,7 @@ Create a production build with `npm run build`, or preview one with `npm run pre
 
 ## Deploy to GitHub Pages
 
-The repository includes a GitHub Actions workflow at `.github/workflows/deploy.yml`. Push to `main`, then in the repository settings choose **Pages → Build and deployment → Source → GitHub Actions**. The workflow builds the site and publishes `dist/` automatically. The site URL is `https://nibe974.github.io/portfolio_Ni/`.
+The repository includes a GitHub Actions workflow at `.github/workflows/deploy.yml`. Before the first deployment, open the repository settings and choose **Pages → Build and deployment → Source → GitHub Actions**. After that one-time change, pushes to `main` build the site and publish `dist/` automatically. The site URL is `https://nibe974.github.io/portfolio_Ni/`.
 
 The Pages build sets the Vite base path for this repository and uses hash-based routes, so direct navigation and refreshes work without a custom 404 redirect.
 
